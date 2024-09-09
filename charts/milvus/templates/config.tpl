@@ -79,39 +79,6 @@ minio:
   useVirtualHost: {{ .Values.minio.useVirtualHost }}
 {{- end }}
 
-{{- if .Values.externalPulsar.enabled }}
-
-mq:
-  type: pulsar
-
-messageQueue: pulsar
-
-pulsar:
-  address: {{ .Values.externalPulsar.host }}
-  port: {{ .Values.externalPulsar.port }}
-  maxMessageSize: {{ .Values.externalPulsar.maxMessageSize }}
-  tenant: "{{ .Values.externalPulsar.tenant }}"
-  namespace: {{ .Values.externalPulsar.namespace }}
-  authPlugin: {{ .Values.externalPulsar.authPlugin }}
-  authParams: {{ .Values.externalPulsar.authParams }}
-
-{{- else if .Values.pulsar.enabled }}
-
-mq:
-  type: pulsar
-
-messageQueue: pulsar
-
-pulsar:
-{{- if contains .Values.pulsar.name .Release.Name }}
-  address: {{ .Release.Name }}-proxy
-{{- else }}
-  address: {{ .Release.Name }}-{{ .Values.pulsar.name }}-proxy
-{{- end }}
-  port: {{ .Values.pulsar.proxy.ports.pulsar }}
-  maxMessageSize: {{ .Values.pulsar.maxMessageSize }}
-{{- end }}
-
 {{- if .Values.externalKafka.enabled }}
 
 mq:
