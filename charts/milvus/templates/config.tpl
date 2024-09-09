@@ -185,36 +185,6 @@ queryNode:
   enableDisk: {{ .Values.standalone.disk.enabled }} # Enable querynode load disk index, and search on disk index
 {{- end }}
 
-indexCoord:
-{{- if .Values.cluster.enabled }}
-  address: {{ template "milvus.indexcoord.fullname" . }}
-{{- else }}
-  address: localhost
-{{- end }}
-  port: {{ .Values.indexCoordinator.service.port }}
-  enableActiveStandby: {{ template "milvus.indexcoord.activeStandby" . }}  # Enable indexcoord active-standby
-
-indexNode:
-  port: 21121
-
-{{- if .Values.cluster.enabled }}
-  enableDisk: {{ .Values.indexNode.disk.enabled }} # Enable index node build disk vector index
-{{- else }}
-  enableDisk: {{ .Values.standalone.disk.enabled }} # Enable index node build disk vector index
-{{- end }}
-
-dataCoord:
-{{- if .Values.cluster.enabled }}
-  address: {{ template "milvus.datacoord.fullname" . }}
-{{- else }}
-  address: localhost
-{{- end }}
-  port: {{ .Values.dataCoordinator.service.port }}
-  enableActiveStandby: {{ template "milvus.datacoord.activeStandby" . }}  # Enable datacoord active-standby
-
-dataNode:
-  port: 21124
-
 log:
   level: {{ .Values.log.level }}
   file:

@@ -6,7 +6,7 @@ fullnameOverride: ""
 
 ## Enable or disable Milvus Cluster mode
 cluster:
-  enabled: true
+  enabled: false
 
 image:
   all:
@@ -66,6 +66,13 @@ customConfigMap: ""
 # in the image and helm chart.
 extraConfigFiles:
   user.yaml: |+
+    etcd:
+      use:
+        embed: true
+      data:
+        dir: /var/lib/milvus/etcd
+    common:
+      storageType: local
     #    For example enable rest http for milvus proxy
     #    proxy:
     #      http:
@@ -79,6 +86,7 @@ extraConfigFiles:
     #   common:
     #     security:
     #       tlsMode: 1
+
 
 ## Expose the Milvus service to be accessed from outside the cluster (LoadBalancer service).
 ## or access it from within the cluster (ClusterIP service). Set the service type and the port to serve it.
@@ -356,97 +364,6 @@ queryNode:
   # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
   strategy: {}
 
-indexCoordinator:
-  enabled: false
-  # You can set the number of replicas greater than 1, only if enable active standby
-  replicas: 1   # Run Index Coordinator mode with replication disabled
-  resources: {}
-  nodeSelector: {}
-  affinity: {}
-  tolerations: []
-  extraEnv: []
-  heaptrack:
-    enabled: false
-  profiling:
-    enabled: false  # Enable live profiling
-  activeStandby:
-    enabled: false  # Enable active-standby when you set multiple replicas for index coordinator
-  # Deployment strategy, default is RollingUpdate
-  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
-  strategy: {}
-
-  service:
-    port: 31000
-    annotations: {}
-    labels: {}
-    clusterIP: ""
-
-indexNode:
-  enabled: true
-  # You can set the number of replicas to -1 to remove the replicas field in case you want to use HPA
-  replicas: 1
-  resources: {}
-  # Set local storage size in resources
-  # limits:
-  #    ephemeral-storage: 100Gi
-  nodeSelector: {}
-  affinity: {}
-  tolerations: []
-  extraEnv: []
-  heaptrack:
-    enabled: false
-  profiling:
-    enabled: false  # Enable live profiling
-  disk:
-    enabled: true  # Enable index node build disk vector index
-    size:
-      enabled: false  # Enable local storage size limit
-  # Deployment strategy, default is RollingUpdate
-  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
-  strategy: {}
-
-dataCoordinator:
-  enabled: false
-  # You can set the number of replicas greater than 1, only if enable active standby
-  replicas: 1           # Run Data Coordinator mode with replication disabled
-  resources: {}
-  nodeSelector: {}
-  affinity: {}
-  tolerations: []
-  extraEnv: []
-  heaptrack:
-    enabled: false
-  profiling:
-    enabled: false  # Enable live profiling
-  activeStandby:
-    enabled: false  # Enable active-standby when you set multiple replicas for data coordinator
-  # Deployment strategy, default is RollingUpdate
-  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
-  strategy: {}
-
-  service:
-    port: 13333
-    annotations: {}
-    labels: {}
-    clusterIP: ""
-
-dataNode:
-  enabled: true
-  # You can set the number of replicas to -1 to remove the replicas field in case you want to use HPA
-  replicas: 1
-  resources: {}
-  nodeSelector: {}
-  affinity: {}
-  tolerations: []
-  extraEnv: []
-  heaptrack:
-    enabled: false
-  profiling:
-    enabled: false  # Enable live profiling
-  # Deployment strategy, default is RollingUpdate
-  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
-  strategy: {}
-
 ## mixCoordinator contains all coord
 ## If you want to use mixcoord, enable this and disable all of other coords
 mixCoordinator:
@@ -486,47 +403,20 @@ streamingNode:
     enabled: false  # Enable live profiling
   strategy: {}
 
-attu:
-  enabled: false
-  name: attu
-  image:
-    repository: zilliz/attu
-    tag: v2.4.7
-    pullPolicy: IfNotPresent
-  service:
-    annotations: {}
-    labels: {}
-    type: ClusterIP
-    port: 3000
-    # loadBalancerIP: ""
-  resources: {}
-  podLabels: {}
-  ingress:
-    enabled: false
-    ingressClassName: ""
-    annotations: {}
-    # Annotation example: set nginx ingress type
-    # kubernetes.io/ingress.class: nginx
-    labels: {}
-    hosts:
-      - milvus-attu.local
-    tls: []
-    #  - secretName: chart-attu-tls
-    #    hosts:
-    #      - milvus-attu.local
-
-
 ## Configuration values for the minio dependency
 ## ref: https://github.com/zilliztech/milvus-helm/blob/master/charts/minio/README.md
 ##
 
 minio:
-  enabled: true
+  enabled: false
   name: minio
-  mode: distributed
+  # mode: distributed
+  mode: standalone
   image:
     tag: "RELEASE.2023-03-20T20-16-18Z"
     pullPolicy: IfNotPresent
+  tls:
+    enabled: false
   accessKey: minioadmin
   secretKey: minioadmin
   existingSecret: ""
@@ -582,7 +472,7 @@ minio:
 ##
 
 etcd:
-  enabled: true
+  enabled: false
   name: etcd
   replicaCount: 3
   pdb:
@@ -638,7 +528,7 @@ etcd:
 ##
 
 pulsar:
-  enabled: true
+  enabled: false
   name: pulsar
 
   fullnameOverride: ""
