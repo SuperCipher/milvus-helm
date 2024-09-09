@@ -10,30 +10,7 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied. See the License for the specific language governing permissions and limitations under the License.
 
-
-{{- $etcdReleaseName := "" -}}
-{{- if contains .Values.etcd.name .Release.Name }}
-  {{- $etcdReleaseName = printf "%s" .Release.Name -}}
-{{- else }}
-  {{- $etcdReleaseName = printf "%s-%s" .Release.Name  .Values.etcd.name -}}
-{{- end }}
-
-{{- $etcdPort := .Values.etcd.service.port }}
-
 {{- $namespace := .Release.Namespace }}
-
-etcd:
-{{- if .Values.externalEtcd.enabled }}
-  endpoints:
-  {{- range .Values.externalEtcd.endpoints }}
-    - {{ . }}
-  {{- end }}
-{{- else }}
-  endpoints:
-{{- range $i := until ( .Values.etcd.replicaCount | int ) }}
-  - {{ $etcdReleaseName }}-{{ $i }}.{{ $etcdReleaseName }}-headless.{{ $namespace }}.svc.cluster.local:{{ $etcdPort }}
-{{- end }}
-{{- end }}
 
 metastore:
   type: etcd
@@ -57,58 +34,6 @@ minio:
   iamEndpoint: {{ .Values.externalS3.iamEndpoint }}
   region: {{ .Values.externalS3.region }}
   useVirtualHost: {{ .Values.externalS3.useVirtualHost }}
-{{- else }}
-{{- if contains .Values.minio.name .Release.Name }}
-  address: {{ .Release.Name }}
-{{- else }}
-  address: {{ .Release.Name }}-{{ .Values.minio.name }}
-{{- end }}
-  port: {{ .Values.minio.service.port }}
-  accessKeyID: {{ .Values.minio.accessKey }}
-  secretAccessKey: {{ .Values.minio.secretKey }}
-  useSSL: {{ .Values.minio.tls.enabled }}
-  bucketName: {{ .Values.minio.bucketName }}
-  rootPath: {{ .Values.minio.rootPath }}
-  useIAM: {{ .Values.minio.useIAM }}
-  {{- if .Values.minio.useIAM }}
-  iamEndpoint: {{ .Values.minio.iamEndpoint }}
-  {{- end }}
-  {{- if ne .Values.minio.region "" }}
-  region: {{ .Values.minio.region }}
-  {{- end }}
-  useVirtualHost: {{ .Values.minio.useVirtualHost }}
-{{- end }}
-
-{{- if .Values.externalKafka.enabled }}
-
-mq:
-  type: kafka
-
-messageQueue: kafka
-
-kafka:
-  brokerList: {{ .Values.externalKafka.brokerList }}
-  securityProtocol: {{ .Values.externalKafka.securityProtocol }}
-  saslMechanisms: {{ .Values.externalKafka.sasl.mechanisms }}
-{{- if .Values.externalKafka.sasl.username }}
-  saslUsername: {{ .Values.externalKafka.sasl.username }}
-{{- end }}
-{{- if .Values.externalKafka.sasl.password }}
-  saslPassword: {{ .Values.externalKafka.sasl.password }}
-{{- end }}
-{{- else if .Values.kafka.enabled }}
-
-mq:
-  type: kafka
-
-messageQueue: kafka
-
-kafka:
-{{- if contains .Values.kafka.name .Release.Name }}
-  brokerList: {{ .Release.Name }}:{{ .Values.kafka.service.ports.client }}
-{{- else }}
-  brokerList: {{ .Release.Name }}-{{ .Values.kafka.name }}:{{ .Values.kafka.service.ports.client }}
-{{- end }}
 {{- end }}
 
 {{- if not .Values.cluster.enabled }}
