@@ -364,32 +364,6 @@ queryNode:
   # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
   strategy: {}
 
-## mixCoordinator contains all coord
-## If you want to use mixcoord, enable this and disable all of other coords
-mixCoordinator:
-  enabled: true
-  # You can set the number of replicas greater than 1, only if enable active standby
-  replicas: 1           # Run Mixture Coordinator mode with replication disabled
-  resources: {}
-  nodeSelector: {}
-  affinity: {}
-  tolerations: []
-  extraEnv: []
-  heaptrack:
-    enabled: false
-  profiling:
-    enabled: false  # Enable live profiling
-  activeStandby:
-    enabled: false  # Enable active-standby when you set multiple replicas for Mixture coordinator
-  # Deployment strategy, default is RollingUpdate
-  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
-  strategy: {}
-
-  service:
-    annotations: {}
-    labels: {}
-    clusterIP: ""
-
 streamingNode:
   replicas: 1
   resources: {}

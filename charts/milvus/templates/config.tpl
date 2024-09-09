@@ -154,28 +154,9 @@ messageQueue: {{ .Values.standalone.messageQueue }}
 {{- end }}
 {{- end }}
 
-rootCoord:
-{{- if .Values.cluster.enabled }}
-  address: {{ template "milvus.rootcoord.fullname" . }}
-{{- else }}
-  address: localhost
-{{- end }}
-  port: {{ .Values.rootCoordinator.service.port }}
-  enableActiveStandby: {{ template "milvus.rootcoord.activeStandby" . }}  # Enable rootcoord active-standby
-
 proxy:
   port: 19530
   internalPort: 19529
-
-queryCoord:
-{{- if .Values.cluster.enabled }}
-  address: {{ template "milvus.querycoord.fullname" . }}
-{{- else }}
-  address: localhost
-{{- end }}
-  port: {{ .Values.queryCoordinator.service.port }}
-
-  enableActiveStandby: {{ template "milvus.querycoord.activeStandby" . }}  # Enable querycoord active-standby
 
 queryNode:
   port: 21123

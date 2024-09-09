@@ -189,24 +189,6 @@ app.kubernetes.io/name: {{ include "milvus.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
-{{/* define rootcoord activeStandby */}}
-{{- define "milvus.rootcoord.activeStandby" -}}
-{{- if or .Values.rootCoordinator.activeStandby.enabled (and .Values.mixCoordinator.enabled .Values.mixCoordinator.activeStandby.enabled) -}}
-true
-{{- else -}}
-false
-{{- end -}}
-{{- end -}}
-
-{{/* define querycoord activeStandby */}}
-{{- define "milvus.querycoord.activeStandby" -}}
-{{- if or .Values.queryCoordinator.activeStandby.enabled (and .Values.mixCoordinator.enabled .Values.mixCoordinator.activeStandby.enabled) -}}
-true
-{{- else -}}
-false
-{{- end -}}
-{{- end -}}
-
 {{/* define indexcoord activeStandby */}}
 {{- define "milvus.indexcoord.activeStandby" -}}
 {{- if or .Values.indexCoordinator.activeStandby.enabled (and .Values.mixCoordinator.enabled .Values.mixCoordinator.activeStandby.enabled) -}}
