@@ -49,79 +49,6 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 {{/*
-Create a default fully qualified Query Coordinator name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-*/}}
-{{- define "milvus.querycoord.fullname" -}}
-{{ template "milvus.fullname" . }}-querycoord
-{{- end -}}
-
-{{/*
-Create a default fully qualified Query Node name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-*/}}
-{{- define "milvus.querynode.fullname" -}}
-{{ template "milvus.fullname" . }}-querynode
-{{- end -}}
-
-{{/*
-Create a default fully qualified Index Coordinator name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-*/}}
-{{- define "milvus.indexcoord.fullname" -}}
-{{ template "milvus.fullname" . }}-indexcoord
-{{- end -}}
-
-{{/*
-Create a default fully qualified Index Node name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-*/}}
-{{- define "milvus.indexnode.fullname" -}}
-{{ template "milvus.fullname" . }}-indexnode
-{{- end -}}
-
-{{/*
-Create a default fully qualified Data Coordinator name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-*/}}
-{{- define "milvus.datacoord.fullname" -}}
-{{ template "milvus.fullname" . }}-datacoord
-{{- end -}}
-
-{{/*
-Create a default fully qualified Data Node name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-*/}}
-{{- define "milvus.datanode.fullname" -}}
-{{ template "milvus.fullname" . }}-datanode
-{{- end -}}
-
-{{/*
-Create a default fully qualified Mixture Coordinator name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-*/}}
-{{- define "milvus.mixcoord.fullname" -}}
-{{ template "milvus.fullname" . }}-mixcoord
-{{- end -}}
-
-{{/*
-Create a default fully qualified Streaming Node name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-*/}}
-{{- define "milvus.streamingnode.fullname" -}}
-{{ template "milvus.fullname" . }}-streamingnode
-{{- end -}}
-
-
-{{/*
-Create a default fully qualified attu name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-*/}}
-{{- define "milvus.attu.fullname" -}}
-{{ template "milvus.fullname" . }}-attu
-{{- end -}}
-
-{{/*
   Create the name of the service account to use for the Milvus components
   */}}
   {{- define "milvus.serviceAccount" -}}
@@ -131,14 +58,6 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
       {{ default "default" .Values.serviceAccount.name }}
   {{- end -}}
   {{- end -}}
-
-{{/*
-Create milvus attu env name.
-*/}}
-{{- define "milvus.attu.env" -}}
-- name: MILVUS_URL
-  value: http://{{ template "milvus.fullname" .}}:19530
-{{- end -}}
 
 {{/*
 Create chart name and version as used by the chart label.
@@ -175,22 +94,4 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- define "milvus.matchLabels" -}}
 app.kubernetes.io/name: {{ include "milvus.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end -}}
-
-{{/* define indexcoord activeStandby */}}
-{{- define "milvus.indexcoord.activeStandby" -}}
-{{- if or .Values.indexCoordinator.activeStandby.enabled (and .Values.mixCoordinator.enabled .Values.mixCoordinator.activeStandby.enabled) -}}
-true
-{{- else -}}
-false
-{{- end -}}
-{{- end -}}
-
-{{/* define datacoord activeStandby */}}
-{{- define "milvus.datacoord.activeStandby" -}}
-{{- if or .Values.dataCoordinator.activeStandby.enabled (and .Values.mixCoordinator.enabled .Values.mixCoordinator.activeStandby.enabled) -}}
-true
-{{- else -}}
-false
-{{- end -}}
 {{- end -}}
