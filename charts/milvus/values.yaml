@@ -252,43 +252,6 @@ standalone:
       size: 50Gi
       subPath: ""
 
-proxy:
-  enabled: true
-  # You can set the number of replicas to -1 to remove the replicas field in case you want to use HPA
-  replicas: 1
-  resources: {}
-  nodeSelector: {}
-  affinity: {}
-  tolerations: []
-  extraEnv: []
-  heaptrack:
-    enabled: false
-  profiling:
-    enabled: false  # Enable live profiling
-  http:
-    enabled: true  # whether to enable http rest server
-    debugMode:
-      enabled: false
-  # Mount a TLS secret into proxy pod
-  tls:
-    enabled: false
-## when enabling proxy.tls, all items below should be uncommented and the key and crt values should be populated.
-#    enabled: true
-#    secretName: milvus-tls
-## expecting base64 encoded values here: i.e. $(cat tls.crt | base64 -w 0) and $(cat tls.key | base64 -w 0)
-#    key: LS0tLS1CRUdJTiBQU--REDUCT
-#    crt: LS0tLS1CRUdJTiBDR--REDUCT
-#  volumes:
-#  - secret:
-#      secretName: milvus-tls
-#    name: milvus-tls
-#  volumeMounts:
-#  - mountPath: /etc/milvus/certs/
-#    name: milvus-tls
-  # Deployment strategy, default is RollingUpdate
-  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
-  strategy: {}
-  
 ###################################
 # External S3
 # - these configs are only used when `externalS3.enabled` is true

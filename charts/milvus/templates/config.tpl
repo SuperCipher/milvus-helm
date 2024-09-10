@@ -46,10 +46,6 @@ messageQueue: {{ .Values.standalone.messageQueue }}
 {{- end }}
 {{- end }}
 
-proxy:
-  port: 19530
-  internalPort: 19529
-
 queryNode:
   port: 21123
 {{- if .Values.cluster.enabled }}

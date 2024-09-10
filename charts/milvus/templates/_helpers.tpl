@@ -41,14 +41,6 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 {{/*
-Create a default fully qualified Proxy name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-*/}}
-{{- define "milvus.proxy.fullname" -}}
-{{ template "milvus.fullname" . }}-proxy
-{{- end -}}
-
-{{/*
   Create the name of the service account to use for the Milvus components
   */}}
   {{- define "milvus.serviceAccount" -}}

@@ -1,4 +1,4 @@
-{{- if or .Values.proxy.enabled (not .Values.cluster.enabled) }}
+{{- if (not .Values.cluster.enabled) }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -11,8 +11,6 @@ metadata:
 {{- end }}
 {{- if not .Values.cluster.enabled }}
     component: "standalone"
-{{- else if and .Values.proxy.enabled .Values.cluster.enabled }}
-    component: "proxy"
 {{- end }}
 {{- with .Values.service.annotations }}
   annotations:
@@ -54,7 +52,5 @@ spec:
 {{ include "milvus.matchLabels" . | indent 4 }}
 {{- if not .Values.cluster.enabled }}
     component: "standalone"
-{{- else if and .Values.proxy.enabled .Values.cluster.enabled }}
-    component: "proxy"
 {{- end }}
 {{- end }}
